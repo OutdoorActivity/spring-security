@@ -25,7 +25,8 @@ import java.util.Map;
 @RequestMapping("/api/employee")
 @RequiredArgsConstructor
 public class EmployeeController {
-   private final JwtProvider jwtProvider;
+    private final JwtProvider jwtProvider;
+
 
     private static final List<Employee> EMPLOYEES = Arrays.asList(
             new Employee(1, "Mr. Smith"),
@@ -42,18 +43,6 @@ public class EmployeeController {
                         "Employee " + employeeId + "not found"
                 ));
     }
-    @GetMapping("update/token")
-    public void updateToken(HttpServletRequest request, HttpServletResponse response,  Authentication authResult) throws IOException {
-        String access_token = jwtProvider.createToken(authResult);
-        String refresh_token = jwtProvider.createRefreshToken(authResult);
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", access_token);
-        tokens.put("refresh_token", refresh_token);
-        response.setHeader("access_token", access_token);
-        response.setHeader("refresh_token", refresh_token);
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 
-    }
 }
 

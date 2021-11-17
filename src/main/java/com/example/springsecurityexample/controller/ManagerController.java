@@ -36,7 +36,7 @@ public class ManagerController {
     );
 
 
-    @PreAuthorize("hasRole('SCRUMMASTER')")
+    @PreAuthorize("hasAnyRole('SCRUMMASTER', 'MANAGER')")
     @GetMapping("/employee/{id}")
     public Employee getEmployee(@PathVariable("id") Integer employeeId) {
         return EMPLOYEES.stream()
@@ -47,7 +47,7 @@ public class ManagerController {
                 ));
     }
 
-    @PreAuthorize("hasRole('SCRUMMASTER')")
+    @PreAuthorize("hasAnyRole('SCRUMMASTER', 'MANAGER')")
     @PostMapping("/task/{id}")
     public void createTask(@PathVariable("id") String taskId, @RequestBody Task task) {
         System.out.println("Created new task" + task);
@@ -70,17 +70,5 @@ public class ManagerController {
     }
 
 
-    @GetMapping("update/token")
-    protected void updateToken(HttpServletRequest request, HttpServletResponse response, Authentication authResult) throws IOException {
-        String access_token = jwtProvider.createToken(authResult);
-        String refresh_token = jwtProvider.createRefreshToken(authResult);
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", access_token);
-        tokens.put("refresh_token", refresh_token);
-        response.setHeader("access_token", access_token);
-        response.setHeader("refresh_token", refresh_token);
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 
-    }
 }
